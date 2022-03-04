@@ -21,5 +21,4 @@ jobs:
 
       - name: Build installer
         run: |
-          $env:VERSION="${{ github.ref_name }}".Substring(1)
           & "C:\Program Files\Microsoft Visual Studio\2022\Enterprise\Common7\IDE\devenv" .\VSTestInstaller.sln /build Release
