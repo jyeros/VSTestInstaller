@@ -1,0 +1,25 @@
+name: Create-Win-Release
+
+on:
+  push:
+    tags:
+      - 'v*'
+  workflow_dispatch:
+
+jobs:
+  build:
+    defaults:
+      run:
+        shell: pwsh
+    runs-on: windows-latest
+    steps:
+      - uses: actions/checkout@v2
+
+      - name: Install dependencies
+        run: |
+          dotnet restore
+
+      - name: Build installer
+        run: |
+          $env:VERSION="${{ github.ref_name }}".Substring(1)
+          & "C:\Program Files\Microsoft Visual Studio\2022\Enterprise\Common7\IDE\devenv" .\VSTestInstaller.sln /build Release
