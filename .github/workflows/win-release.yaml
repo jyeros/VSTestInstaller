@@ -22,7 +22,7 @@ jobs:
       - name: Set version
         run: |
           $VERSION="${{ github.ref_name }}".Substring(1)
-          echo "VERSION=$VERSION" >> $GITHUB_ENV
+          echo "VERSION=$VERSION" >> $env:GITHUB_ENV
 
       - name: Build installer
         run: |
