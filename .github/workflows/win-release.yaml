@@ -19,13 +19,13 @@ jobs:
         run: |
           dotnet restore
 
-      - name: Set version
-        run: |
-          $VERSION="${{ github.ref_name }}".Substring(1)
-          echo "VERSION=$VERSION" >> $env:GITHUB_ENV
-
       - name: Build installer
         run: |
-          & "C:\Program Files\Microsoft Visual Studio\2022\Enterprise\Common7\IDE\devenv" .\VSTestInstaller.sln /build Release
-        env:
-          VERSION: ${{ env.VERSION }}
+          $BuildJob = Start-Job -FilePath "./scripts/build-installer.ps1" -ArgumentList "${{ github.ref_name }}".Substring(1)
+          Do {
+              Start-Sleep -Seconds 30
+              $filetest = Test-Path ./src/VSTestInstaller.Setup/Release/VSTestInstaller.Setup.msi
+              Receive-Job -Job $BuildJob
+          } While ($filetest -eq $false);
+          Stop-Job -Job $BuildJob
+          Remove-Job -Job $BuildJob
